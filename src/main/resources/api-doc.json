@@ -1,0 +1,151 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Stock Quote API",
+      "description": "API for retrieving stock quotes from remote data source"
+    },
+    "servers": [
+      {
+        "url": "/api"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "basicAuth": {
+          "type": "http",
+          "scheme": "basic"
+        }
+      },
+      "schemas": {
+        "Quote": {
+          "type": "object",
+          "properties": {
+            "change": {
+              "type": "string",
+              "example": "0.7500"
+            },
+            "change percent": {
+              "type": "string",
+              "example": "0.3788%"
+            },
+            "high": {
+              "type": "string",
+              "example": "199.4000"
+            },
+            "latest trading day": {
+              "type": "string",
+              "example": "2024-08-27"
+            },
+            "low": {
+              "type": "string",
+              "example": "196.9700"
+            },
+            "open": {
+              "type": "string",
+              "example": "197.4400"
+            },
+            "previous close": {
+              "type": "string",
+              "example": "197.9800"
+            },
+            "price": {
+              "type": "string",
+              "example": "198.7300"
+            },
+            "symbol": {
+              "type": "string",
+              "example": "IBM"
+            },
+            "volume": {
+              "type": "string",
+              "example": "2617229"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "basicAuth": []
+      }
+    ],
+    "paths": {
+      "/": {
+        "get": {
+          "summary": "Get API documentation",
+          "operationId": "getApiDoc",
+          "responses": {
+            "200": {
+              "description": "API documentation"
+            }
+          }
+        }
+      },
+      "/quote/{symbol}": {
+        "get": {
+          "summary": "Get stock quote by symbol",
+          "operationId": "getQuoteBySymbol",
+          "parameters": [
+            {
+              "name": "symbol",
+              "in": "path",
+              "required": true,
+              "description": "Stock symbol to retrieve the quote for",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Stock quote retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Quote"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Stock symbol not found"
+            }
+          }
+        }
+      },
+      "/quote/batch": {
+        "get": {
+          "summary": "Get stock quotes for multiple symbols",
+          "operationId": "getBatchQuotes",
+          "parameters": [
+            {
+              "name": "symbols",
+              "in": "query",
+              "required": true,
+              "description": "Comma-separated list of stock symbols",
+              "schema": {
+                "type": "string",
+                "example": "GOOG,IBM,AMZN"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of stock quotes retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Quote"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
